@@ -1,0 +1,28 @@
+#ifndef _PROT_ID_H_
+#define _PROT_ID_H_
+
+/* refer to h_protOR in soc.h */
+
+enum prot_id {
+	PROT_ID_CPU,
+	PROT_ID_AIO,
+	PROT_ID_VIO,
+	PROT_ID_GFXDATA,
+	PROT_ID_GFXFW,
+	PROT_ID_GFXPM,
+	PROT_ID_GFXCODE,
+	PROT_ID_IMTEST,
+	PROT_ID_EMMC,
+	PROT_ID_SDIO,
+	PROT_ID_USB2,
+	PROT_ID_PB,
+	PROT_ID_USB3,
+	PROT_ID_NAND,
+	PROT_ID_GE,
+	PROT_ID_BCMCPU,
+	PROT_ID_BCMDMA,
+	PROT_ID_BCMDIR,
+	PROT_ID_MAX
+};
+
+#endif /* _PROT_ID_H_ */
