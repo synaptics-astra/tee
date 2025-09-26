@@ -64,13 +64,16 @@
 #define PT_START           (GPU_START + GPU_SIZE)
 #define PT_SIZE            0x00200000u
 
+#define VPP_START           (PT_START + PT_SIZE)
+#define VPP_SIZE            0x01400000u
+
 #define REGISTER_START      0xF6000000u
 #define REGISTER_SIZE       0x03040000u
 
 #define NONSECURE_NC_SIZE   0x00800000u
 #define SECURE_SIZE         0x01000000u
 
-#define SYSTEM_START        (PT_START + PT_SIZE)
+#define SYSTEM_START        (VPP_START + VPP_SIZE)
 #define SYSTEM_SIZE         (0x80000000 - SYSTEM_START - NONSECURE_NC_SIZE - SECURE_SIZE)
 
 #define NONSECURE_SIZE      0x1F400000u
@@ -111,6 +114,10 @@ const struct mem_region mem_region_param[] = {
 	{"pt",		PT_START, PT_SIZE,
 		MR_ATTR(TZ_SRW_NNA, 0, 0, MT_UNCACHED, MR_M_PREMAPPED), 0,
 		{TEE_MR_USER_PT, 0, 0, TEE_ZONE_ACPU}},
+
+	{"vpp",	VPP_START, VPP_SIZE,
+		MR_ATTR(TZ_SRW_NRW, 0, 0, MT_UNCACHED, MR_M_PREMAPPED), 0,
+		{TEE_MR_USER_VPP, 0, 0, TEE_ZONE_ACPU}},
 
 	{"NonSecure",	NONSECURE_START, NONSECURE_SIZE,
 		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_CACHED, MR_M_PREMAPPED), 0,

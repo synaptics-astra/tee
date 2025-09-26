@@ -59,6 +59,7 @@
 #define TEE_MR_USER_REGISTER    0x07000000  /* The region is for register */
 #define TEE_MR_USER_BCM         0x08000000  /* The region is for BCM */
 #define TEE_MR_USER_PT          0x09000000  /* The region is for Hardware page table*/
+#define TEE_MR_USER_VPP         0x0A000000  /* The region is for VPP*/
 
 /* MACRO funtions for userdata processing */
 #define TEE_MR_USER(mr)                 (((mr)->userdata[0] & 0xFF000000))
@@ -70,6 +71,7 @@
 #define TEE_MR_USER_IS_SYSTEM(mr)       (TEE_MR_USER(mr) == TEE_MR_USER_SYSTEM)
 #define TEE_MR_USER_IS_ION(mr)          (TEE_MR_USER(mr) == TEE_MR_USER_ION)
 #define TEE_MR_USER_IS_PT(mr)           (TEE_MR_USER(mr) == TEE_MR_USER_PT)
+#define TEE_MR_USER_IS_VPP(mr)          (TEE_MR_USER(mr) == TEE_MR_USER_VPP)
 
 /* MACRO functions for ION memory region userdata processing */
 #define TEE_MR_ION_ALG(mr)              (((mr)->userdata[0] & 0x00FFFFFF))

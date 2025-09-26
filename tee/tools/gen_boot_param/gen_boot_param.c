@@ -7,6 +7,41 @@
 #include "tz_boot_param.h"
 #include "tz_boot_param_value.h"
 
+static void dump_mem_region(char *out_file, const struct tz_boot_param_list *bp)
+{
+	const struct mem_region * mr;
+	int mr_num;
+	int i = 0;
+	FILE *file;
+	char *file_mr;
+
+	if(bp->id != TZ_BOOT_PARAM_MEMREGION)
+		return;
+
+	file_mr = malloc(strlen(out_file) + 10);
+	if (!file_mr)
+		return;
+
+	sprintf(file_mr, "%s.mr", out_file);
+
+	file = fopen(file_mr, "w");
+	if (file == NULL) {
+		printf("fail to open %s", file_mr);
+		free(file_mr);
+		return;
+	}
+	mr = bp->data;
+	mr_num = bp->size / sizeof(struct mem_region);
+
+	for (i = 0; i < mr_num; i++){
+		printf("%s: base = 0x%08x, size = 0x%08x\n", mr[i].name, mr[i].base, mr[i].size);
+		fprintf(file, "%s 0x%x 0x%x\n", mr[i].name, mr[i].base, mr[i].size);
+	}
+
+	fclose(file);
+	free(file_mr);
+}
+
 int main(int argc, char **argv)
 {
 	char				*out_file = 0;
@@ -35,6 +70,7 @@ int main(int argc, char **argv)
 	for (i = 0; i < bp_num; i++) {
 		param.id = bp_list[i].id;
 		param.size = bp_list[i].size + sizeof(param);
+		dump_mem_region(out_file, bp_list + i);
 		if (write(fd, &param, sizeof(param)) != sizeof(param))
 			goto END;
 		if (write(fd, bp_list[i].data, bp_list[i].size) != bp_list[i].size)
