@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2013-2014 Marvell International Ltd. and its affiliates.
  * All rights reserved.
@@ -46,6 +47,8 @@
 	 ION_A_NC | ION_A_NS)
 
 /* memory region setting */
+#define MAX_DDR_SIZE	0x80000000
+
 #define SYS_INIT_START  0x00000000u
 #define SYS_INIT_SIZE   0x00100000u
 
@@ -62,7 +65,7 @@
 #define GPU_SIZE            0x00100000u
 
 #define PT_START           (GPU_START + GPU_SIZE)
-#define PT_SIZE            0x00200000u
+#define PT_SIZE            0x00400000u
 
 #define VPP_START           (PT_START + PT_SIZE)
 #define VPP_SIZE            0x01400000u
@@ -70,25 +73,21 @@
 #define REGISTER_START      0xF6000000u
 #define REGISTER_SIZE       0x03040000u
 
-#define NONSECURE_NC_SIZE   0x00800000u
+#define SECURE_START        (VPP_START + VPP_SIZE)
 #define SECURE_SIZE         0x01000000u
 
-#define SYSTEM_START        (VPP_START + VPP_SIZE)
-#define SYSTEM_SIZE         (0x80000000 - SYSTEM_START - NONSECURE_NC_SIZE - SECURE_SIZE)
+#define NONSECURE_NC_START  (SECURE_START + SECURE_SIZE)
+#define NONSECURE_NC_SIZE   0x00800000u
+
+#define SYSTEM_START        (NONSECURE_NC_START + NONSECURE_NC_SIZE)
+#define SYSTEM_SIZE         (MAX_DDR_SIZE - SYSTEM_START)
 
 #define NONSECURE_SIZE      0x10400000u
-#define NONSECURE_START     (SYSTEM_START + SYSTEM_SIZE - NONSECURE_SIZE - 0x2800000)
+#define NONSECURE_START     (MAX_DDR_SIZE - NONSECURE_SIZE - 0x4000000)
 /* CMA start address should aligned with 0x400000 */
 COMPILE_ASSERT((NONSECURE_START % 0x400000 == 0), cma_start_align_error);
 /* CMA size should aligned with 0x400000 */
 COMPILE_ASSERT((NONSECURE_SIZE % 0x400000 == 0), cma_size_align_error);
-
-#define NONSECURE_NC_START  (SYSTEM_START + SYSTEM_SIZE)
-
-#define SECURE_START        (NONSECURE_NC_START + NONSECURE_NC_SIZE)
-
-/* SECURE_START+SECURE_SIZE should not exceed DDR size */
-COMPILE_ASSERT(((SECURE_START + SECURE_SIZE) == 0x80000000u), exceeding_ddr_size_error);
 
 const struct mem_region mem_region_param[] = {
 	{"sys_init",	SYS_INIT_START, SYS_INIT_SIZE,
@@ -119,6 +118,14 @@ const struct mem_region mem_region_param[] = {
 		MR_ATTR(TZ_SRW_NRW, 0, 0, MT_UNCACHED, MR_M_PREMAPPED), 0,
 		{TEE_MR_USER_VPP, 0, 0, TEE_ZONE_ACPU}},
 
+	{"Secure",	SECURE_START, SECURE_SIZE,
+		MR_ATTR(TZ_SRW_NNA, 0, 0, MT_CACHED, MR_M_PREMAPPED), 0,
+		{TEE_MR_USER_ION | 0x00000005, ION_ATTR_SW_OTHER, 0, TEE_ZONE_ACPU}},
+
+	{"NonSecure-NC",	NONSECURE_NC_START, NONSECURE_NC_SIZE,
+		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_UNCACHED, MR_M_PREMAPPED), 0,
+		{TEE_MR_USER_ION | 0x00000005, ION_ATTR_NW_NONCACHED, 0, TEE_ZONE_ACPU}},
+
 	{"NonSecure",	NONSECURE_START, NONSECURE_SIZE,
 		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_CACHED, MR_M_PREMAPPED), 0,
 		{TEE_MR_USER_ION | 0x00000004, ION_ATTR_NW_ALL, 0, TEE_ZONE_ACPU}},
@@ -126,14 +133,6 @@ const struct mem_region mem_region_param[] = {
 	{"system",	SYSTEM_START, SYSTEM_SIZE,
 		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_CACHED, 0), 0,
 		{TEE_MR_USER_SYSTEM, 0, 0, TEE_ZONE_RSV}},
-
-	{"NonSecure-NC",	NONSECURE_NC_START, NONSECURE_NC_SIZE,
-		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_UNCACHED, MR_M_PREMAPPED), 0,
-		{TEE_MR_USER_ION | 0x00000005, ION_ATTR_NW_NONCACHED, 0, TEE_ZONE_ACPU}},
-
-	{"Secure",	SECURE_START, SECURE_SIZE,
-		MR_ATTR(TZ_SRW_NNA, 0, 0, MT_CACHED, MR_M_PREMAPPED), 0,
-		{TEE_MR_USER_ION | 0x00000005, ION_ATTR_SW_OTHER, 0, TEE_ZONE_ACPU}},
 
 	{"register",	REGISTER_START, REGISTER_SIZE,
 		MR_ATTR(TZ_SRW_NNA, 1, 0, MT_DEVICE, MR_M_PREMAPPED), 0,
