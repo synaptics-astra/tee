@@ -45,6 +45,7 @@
 
 /* memory region setting */
 #define MAX_DDR_SIZE	0x100000000
+#define NON_SECURE_TOP	0xE0000000 /* 4G only*/
 
 #define TZ_START    0x00100000u
 #define TZ_SIZE     0x00500000u
@@ -65,7 +66,7 @@
 #define SYSTEM_SIZE         (MAX_DDR_SIZE - SYSTEM_START)
 
 #define NONSECURE_SIZE      0x20000000u
-#define NONSECURE_START     (MAX_DDR_SIZE - NONSECURE_SIZE - 0x4000000)
+#define NONSECURE_START     (NON_SECURE_TOP - NONSECURE_SIZE - 0x4000000)
 /* CMA start address should aligned with 0x400000 */
 COMPILE_ASSERT((NONSECURE_START % 0x400000 == 0), cma_start_align_error);
 /* CMA size should aligned with 0x400000 */
