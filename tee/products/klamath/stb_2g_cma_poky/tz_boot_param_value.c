@@ -1,25 +1,6 @@
+// SPDX-License-Identifier: BSD-2-Clause
 /*
- * Copyright (c) 2013-2014 Marvell International Ltd. and its affiliates.
- * All rights reserved.
- *
- * MARVELL CONFIDENTIAL
- *
- * The source code contained or described herein and all documents related to
- * the source code ("Material") are owned by Marvell International Ltd or its
- * suppliers or licensors. Title to the Material remains with Marvell
- * International Ltd or its suppliers and licensors. The Material contains
- * trade secrets and proprietary and confidential information of Marvell or
- * its suppliers and licensors.
- * The Material is protected by worldwide copyright and trade secret laws and
- * treaty provisions. No part of the Material may be used, copied, reproduced,
- * modified, published, uploaded, posted, transmitted, distributed, or
- * disclosed in any way without Marvell's prior express written permission.
- *
- * No license under any patent, copyright, trade secret or other intellectual
- * property right is granted to or conferred upon you by disclosure or delivery
- * of the Materials, either expressly, by implication, inducement, estoppel or
- * otherwise. Any license under such intellectual property rights must be
- * express and approved by Marvell in writing.
+ * Copyright (c) 2025, Synaptics Incorporated.
  */
 #include "mem_region.h"
 #include "mem_region_userdata.h"
@@ -29,19 +10,7 @@
 #include "tz_boot_param.h"
 #include "tee_ta_perm_rule_def.h"
 
-#define ION_ATTR_SW_NONCACHED	\
-	(ION_A_CO | ION_A_CC | ION_A_ND | ION_A_FD | ION_A_NC | ION_A_FS)
-#define ION_ATTR_SW_OTHER	\
-	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
-	 ION_A_NC | ION_A_FC | ION_A_FS)
-#define ION_ATTR_NW_ALL	\
-	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
-	 ION_A_FC | ION_A_NS)
 
-/* Temporary add. It should be removed once TEE support mapping memory on demand. */
-#define ION_ATTR_NW_NONCACHED \
-	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
-	 ION_A_NC | ION_A_NS)
 
 /* memory region setting */
 #define MAX_DDR_SIZE	0x80000000

@@ -96,5 +96,21 @@
 #define TEE_MR_ACPU_ZONE(mr)        (((mr)->userdata[3] == TEE_ZONE_ACPU))
 #define TEE_MR_RSV_ZONE(mr)        (((mr)->userdata[3] == TEE_ZONE_RSV))
 
+#define ION_ATTR_SW_NONCACHED	\
+	(ION_A_CO | ION_A_CC | ION_A_ND | ION_A_FD | ION_A_NC | ION_A_FS)
+#define ION_ATTR_SW_OTHER	\
+	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
+	 ION_A_NC | ION_A_FC | ION_A_FS)
+#define ION_ATTR_NW_ALL	\
+	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
+	 ION_A_FC | ION_A_NS)
+#define ION_ATTR_HW_ONLY \
+	(ION_A_CH | ION_A_ND | ION_A_FD | ION_A_NC | ION_A_FC | ION_A_FS)
+
+/* Temporary add. It should be removed once TEE support mapping memory on demand. */
+#define ION_ATTR_NW_NONCACHED \
+	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
+	 ION_A_NC | ION_A_NS)
+
 #endif	/* __MEM_REGION_USERDATA_H__ */
 

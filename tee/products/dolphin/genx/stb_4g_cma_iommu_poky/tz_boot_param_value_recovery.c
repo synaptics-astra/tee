@@ -1,25 +1,6 @@
+// SPDX-License-Identifier: BSD-2-Clause
 /*
- * Copyright (c) 2013-2014 Marvell International Ltd. and its affiliates.
- * All rights reserved.
- *
- * MARVELL CONFIDENTIAL
- *
- * The source code contained or described herein and all documents related to
- * the source code ("Material") are owned by Marvell International Ltd or its
- * suppliers or licensors. Title to the Material remains with Marvell
- * International Ltd or its suppliers and licensors. The Material contains
- * trade secrets and proprietary and confidential information of Marvell or
- * its suppliers and licensors.
- * The Material is protected by worldwide copyright and trade secret laws and
- * treaty provisions. No part of the Material may be used, copied, reproduced,
- * modified, published, uploaded, posted, transmitted, distributed, or
- * disclosed in any way without Marvell's prior express written permission.
- *
- * No license under any patent, copyright, trade secret or other intellectual
- * property right is granted to or conferred upon you by disclosure or delivery
- * of the Materials, either expressly, by implication, inducement, estoppel or
- * otherwise. Any license under such intellectual property rights must be
- * express and approved by Marvell in writing.
+ * Copyright (c) 2025, Synaptics Incorporated.
  */
 #include "mem_region.h"
 #include "mem_region_userdata.h"
@@ -31,19 +12,7 @@
 #include "tz_boot_param.h"
 #include "tee_ta_perm_rule_def.h"
 
-#define ION_ATTR_SW_NONCACHED	\
-	(ION_A_CO | ION_A_CC | ION_A_ND | ION_A_FD | ION_A_NC | ION_A_FS)
-#define ION_ATTR_SW_OTHER	\
-	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
-	 ION_A_NC | ION_A_FC | ION_A_FS)
-#define ION_ATTR_NW_ALL	\
-	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
-	 ION_A_FC | ION_A_NS)
 
-/* Temporary add. It should be removed once TEE support mapping memory on demand. */
-#define ION_ATTR_NW_NONCACHED \
-	(ION_A_CO | ION_A_CG | ION_A_CV | ION_A_CC | ION_A_ND | ION_A_FD | \
-	 ION_A_NC | ION_A_NS)
 
 /* memory region setting */
 #define RC_MAX_DDR_SIZE	0xE0000000
@@ -52,10 +21,10 @@
 #define RC_SYS_INIT_SIZE   0x00100000u
 
 #define RC_TZ_START    (RC_SYS_INIT_START + RC_SYS_INIT_SIZE)
-#define RC_TZ_SIZE     0x04000000u
+#define RC_TZ_SIZE     0x02000000u
 
 #define RC_BOOTLOADER_START    (RC_TZ_START + RC_TZ_SIZE)
-#define RC_BOOTLOADER_SIZE     0x00700000u
+#define RC_BOOTLOADER_SIZE     0x02700000u
 
 #define RC_BCM_START           (RC_BOOTLOADER_START + RC_BOOTLOADER_SIZE)
 #define RC_BCM_SIZE            0x00100000u
@@ -121,10 +90,6 @@ const struct mem_region mem_region_param[] = {
 	{"Secure",	RC_SECURE_START, RC_SECURE_SIZE,
 		MR_ATTR(TZ_SRW_NNA, 0, 0, MT_CACHED, MR_M_PREMAPPED), 0,
 		{TEE_MR_USER_ION | 0x00000005, ION_ATTR_SW_OTHER, 0, TEE_ZONE_ACPU}},
-
-	{"NonSecure-NC",	RC_NONSECURE_NC_START, RC_NONSECURE_NC_SIZE,
-		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_UNCACHED, MR_M_PREMAPPED), 0,
-		{TEE_MR_USER_ION | 0x00000005, ION_ATTR_NW_NONCACHED, 0, TEE_ZONE_ACPU}},
 
 	{"NonSecure",	RC_NONSECURE_START, RC_NONSECURE_SIZE,
 		MR_ATTR(TZ_SRW_NRW, 0, 1, MT_CACHED, MR_M_PREMAPPED), 0,
